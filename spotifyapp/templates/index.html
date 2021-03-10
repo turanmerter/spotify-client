@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Find most popular songs</title>
+  </head>
+  <script type=text/javascript>
+    const fetchSongs = () => {
+
+      const button = document. querySelector('button')
+      button.disabled = true
+
+      const genresElement = document.getElementById("genres");
+      const selectedGenre = genresElement.value;
+      const url = {{url_for("tracks", genre=selectedGenre)}};
+
+      const xmlHttp = new XMLHttpRequest();
+      xmlHttp.onreadystatechange = () => { 
+        if (xmlHttp.readyState == 4) {
+          button.disabled = false
+          if (xmlHttp.status == 200) {
+            const songs = JSON.parse(xmlHttp.responseText);
+            createSongList(songs);
+          } else {
+            alert("A problem occured.");
+          }
+        }
+      }
+      xmlHttp.open("GET", url + selectedGenre, true);
+      xmlHttp.send(null);
+    };
+
+    const createSongList = (songs) => {
+      const songHolder = document.getElementById("song_holder");
+      songHolder.innerHTML = '';
+      songs.forEach(song => {
+        const songElement = createSongCard(song);
+        songHolder.appendChild(songElement);
+      });
+    };
+
+    const createSongCard = ({track, artist, release_date, album_image_url}) => {
+      var holder = document.createElement("div");
+      var detail = document.createElement("p");
+      var image = document.createElement("img");
+
+      detail.textContent = track + " by " + artist + " (" + release_date + ")";
+      image.src = album_image_url;
+      image.style.maxWidth = "100px";
+
+      holder.appendChild(detail);
+      holder.appendChild(image);
+
+      return holder;
+    };
+  </script>
+  <body>
+    <div>
+      <label for="genres">Choose a genre:</label>
+      <select name="genres" id="genres">
+        {% for genre in genre_list %}
+        <option value="{{genre}}">{{genre}}</option>
+        {% endfor %}
+      </select>
+      <button id="button" onclick="fetchSongs()">Submit</button>
+      <div id="song_holder">
+
+      </div>
+    </div>
+  </body>
+</html>
