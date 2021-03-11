@@ -7,4 +7,5 @@ setup(
     install_requires=[
         'flask', 'requests'
     ],
+    extras_require={"test": ["pytest", "coverage"]},
 )

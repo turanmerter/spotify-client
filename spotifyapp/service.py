@@ -16,9 +16,6 @@ def get_genres():
         return "Internal error"
 
 def get_most_popular_songs(genre):
-    try:
-        artist = genres_service.select_artist_from_genre(genre)
-        songs = spotify_service.get_most_popular_songs(artist)
-        return songs
-    except:
-        return "Internal error"
+    artist = genres_service.select_artist_from_genre(genre)
+    songs = spotify_service.get_most_popular_songs(artist)
+    return songs

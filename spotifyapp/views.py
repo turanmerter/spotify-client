@@ -1,6 +1,7 @@
 from flask import request, jsonify, render_template
 from spotifyapp import app
 import spotifyapp.service as service
+from spotifyapp.exception import UnknownGenreError
 
 @app.route('/genres', methods=['GET'])
 def genres():
@@ -9,8 +10,13 @@ def genres():
 
 @app.route('/tracks/<genre>', methods=['GET'])
 def tracks(genre):
-    songs = service.get_most_popular_songs(genre)
-    return jsonify(songs)
+    try:
+        songs = service.get_most_popular_songs(genre)
+        return jsonify(songs)
+    except UnknownGenreError:
+        return jsonify("Genre is unknown"), 404
+    except:
+        return jsonify("Internal error"), 500
 
 @app.route('/')
 def hello():

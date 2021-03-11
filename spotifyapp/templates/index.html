@@ -6,7 +6,7 @@
   <script type=text/javascript>
     const fetchSongs = () => {
 
-      const button = document. querySelector('button')
+      const button = document.querySelector('button')
       button.disabled = true
 
       const genresElement = document.getElementById("genres");
@@ -20,6 +20,8 @@
           if (xmlHttp.status == 200) {
             const songs = JSON.parse(xmlHttp.responseText);
             createSongList(songs);
+          } else if (xmlHttp.status == 404)  {
+            alert("Genre is unknown.");
           } else {
             alert("A problem occured.");
           }
@@ -32,39 +34,72 @@
     const createSongList = (songs) => {
       const songHolder = document.getElementById("song_holder");
       songHolder.innerHTML = '';
+
+      const holder = document.createElement("tr");
+      const thTrack = document.createElement("th");
+      const thArtist = document.createElement("th");
+      const thReleaseDate = document.createElement("th");
+      const thImage = document.createElement("th");
+
+      thTrack.textContent = "Track";
+      thArtist.textContent = "Artist";
+      thReleaseDate.textContent = "Release Date";
+      thImage.textContent = "Album Cover";
+
+      holder.appendChild(thTrack);
+      holder.appendChild(thArtist);
+      holder.appendChild(thReleaseDate);
+      holder.appendChild(thImage);
+
+      songHolder.appendChild(holder);
+
       songs.forEach(song => {
-        const songElement = createSongCard(song);
+        const songElement = createSongRow(song);
         songHolder.appendChild(songElement);
       });
     };
 
-    const createSongCard = ({track, artist, release_date, album_image_url}) => {
-      var holder = document.createElement("div");
-      var detail = document.createElement("p");
-      var image = document.createElement("img");
+    const createSongRow = ({track, artist, release_date, album_image_url}) => {
 
-      detail.textContent = track + " by " + artist + " (" + release_date + ")";
+      const holder = document.createElement("tr");
+      const tdTrack = document.createElement("td");
+      const tdArtist = document.createElement("td");
+      const tdReleaseDate = document.createElement("td");
+      const tdImage = document.createElement("td");
+      const image = document.createElement("img");
+
+      tdTrack.textContent = track;
+      tdArtist.textContent = artist;
+      tdReleaseDate.textContent = release_date;
+      
       image.src = album_image_url;
       image.style.maxWidth = "100px";
+      tdImage.appendChild(image);
 
-      holder.appendChild(detail);
-      holder.appendChild(image);
+      holder.appendChild(tdTrack);
+      holder.appendChild(tdArtist);
+      holder.appendChild(tdReleaseDate);
+      holder.appendChild(tdImage);
 
       return holder;
     };
   </script>
   <body>
     <div>
+      <!-- disabled to convert dropdown into a textbox
       <label for="genres">Choose a genre:</label>
       <select name="genres" id="genres">
         {% for genre in genre_list %}
         <option value="{{genre}}">{{genre}}</option>
         {% endfor %}
       </select>
+      -->
+      <label for="genres">Please enter a genre:</label>
+      <input id="genres" type="text" placeholder="Genre"></input>
       <button id="button" onclick="fetchSongs()">Submit</button>
-      <div id="song_holder">
+      <table id="song_holder">
 
-      </div>
+      </table>
     </div>
   </body>
 </html>

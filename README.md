@@ -2,7 +2,7 @@
 
 This application is a simple prototype that uses Spotify Web API to gather the most popular songs of a randomly selected artist from a predefined list.
 
-There is also a front end element baked into it. It is developed using template feature of the flask.
+There is also a front end element baked into it. It is developed using template feature of the flask and served from the same port as the root.
 
 The project uses two packages: flask and requests.
 

@@ -1,6 +1,8 @@
 import json
 import random
 
+from spotifyapp.exception import UnknownGenreError
+
 class Genres:
     _genres_file_name = "spotifyapp/genres.json"
 
@@ -19,11 +21,11 @@ class Genres:
     # so the earliest point we can control the input validity is here 
     def _get_artists(self, genre_name):
         if type(genre_name) != str or not genre_name:
-            raise Exception("Given genre is not valid")
+            raise UnknownGenreError("Given genre is not valid")
 
         genres = self.read_genres()
         if genre_name not in genres:
-            raise Exception("Given genre is not in the list")
+            raise UnknownGenreError("Given genre is not in the list")
 
         artists = genres[genre_name]
         return artists
